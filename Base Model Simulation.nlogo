@@ -1,7 +1,12 @@
+globals[
+  recruitment_rate
+]
 turtles-own [;; Turtle characteristics
   infected?
   recovered?
   global?
+
+  infected_duration
 ]
 
 to setup ;; this procedure sets up the simulation for start
@@ -12,8 +17,9 @@ to setup ;; this procedure sets up the simulation for start
     set infected? false
     set recovered? false
     set global? false
+    set infected_duration 0
    ]
-
+  set recruitment_rate init_recruitment_rate
   ask one-of turtles [set infected? true] ;;one gets infected
   ask turtles [recolor]
 
@@ -41,12 +47,13 @@ end
 to go ;; each tick of simulation turtle do this
 
   ;if all? turtles [infected?] [stop]
-  ;if all? turtles [infected? = false and global? = false] [stop]
+  ;if all? turtles [infected? = false] and ticks >= 100 [stop]
 
-  if ticks mod 25 = 0 and ticks != 0 [ ; epidemic waves
-    ask turtles [went_global]
+  if ticks mod 30 = 0 and ticks != 0 [ ; epidemic waves
+    testfunc
+    ;ask turtles [went_global]
   ]
-  ask turtles [went_local]
+  ;ask turtles [went_local]
   ask turtles [move]
   ask turtles [spread]
   ask turtles [recover recovery_rate]
@@ -68,16 +75,17 @@ end
 
 to spread
     ifelse infected? [] [
-    if any? other turtles-here with [infected?] and global? = false and random-float 1.0 < transmission_rate and recovered? = false [set infected? true] ;; checking if there is virus near this agent
+    if global? = false and random-float 1.0 < transmission_rate and recovered? = false and any? other turtles-here with [infected?] [set infected? true] ;; checking if there is virus near this agent
   ]
 end
 
 to  recover [rate]
   if infected?[
-    if random-float 1.0 < rate [
-    set infected? false
-    set recovered? true
+    if random-float 1.0 < rate[
+      set infected? false
+      set recovered? true
     ]
+    set infected_duration infected_duration + 1
   ]
 end
 
@@ -86,12 +94,26 @@ to recolor ;; recolors agent
   if recovered? [set color yellow]
   if infected? [set color red]
 end
+
+to testfunc
+  let eligible-turtles turtles with [not infected? and not recovered?]
+  let num-eligible count eligible-turtles
+  if num-eligible >= recruitment_rate [
+    ask n-of recruitment_rate eligible-turtles [
+      if random-float 1.0 < global_transmission_rate[
+      set infected? true
+      recover global_recovery_rate
+    ]
+    ]
+  ]
+  set recruitment_rate recruitment_rate + init_recruitment_rate
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 224
 21
-652
-450
+764
+562
 -1
 -1
 16.12121212121212
@@ -115,10 +137,10 @@ ticks
 30.0
 
 BUTTON
-2
-132
-60
-168
+15
+128
+89
+164
 Setup
 setup
 NIL
@@ -132,10 +154,10 @@ NIL
 1
 
 BUTTON
-60
-133
-130
-166
+128
+129
+206
+162
 Start
 go
 T
@@ -156,91 +178,50 @@ SLIDER
 number_turtles
 number_turtles
 0
-5000
-644.0
+500
+400.0
 1
 1
 NIL
 HORIZONTAL
 
-SWITCH
-127
-135
-220
-168
-connection
-connection
+SLIDER
+0
+490
+215
+523
+travel_rate
+travel_rate
+0
 1
+0.0
+0.05
 1
--1000
+NIL
+HORIZONTAL
 
 SLIDER
-3
+0
+529
+209
+562
+return_rate
+return_rate
+0
+1
+0.0
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+4
 202
 218
 235
-travel_rate
-travel_rate
-0
-1
-0.15
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-3
-241
-212
-274
-return_rate
-return_rate
-0
-1
-0.3
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-2
-282
-216
-315
 transmission_rate
 transmission_rate
-0
-1
-0.2
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-7
-334
-195
-367
-recovery_rate
-recovery_rate
-0
-1
-0.05
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-6
-386
-208
-419
-global_transmission_rate
-global_transmission_rate
 0
 1
 0.5
@@ -250,25 +231,55 @@ NIL
 HORIZONTAL
 
 SLIDER
-13
-438
-185
-471
+6
+244
+216
+277
+recovery_rate
+recovery_rate
+0
+1
+0.1
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+9
+284
+211
+317
+global_transmission_rate
+global_transmission_rate
+0
+1
+0.55
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+6
+329
+178
+362
 global_recovery_rate
 global_recovery_rate
 0
 1
-0.05
+0.1
 0.05
 1
 NIL
 HORIZONTAL
 
 PLOT
-698
-50
-1150
-252
+768
+41
+1220
+243
 infected
 NIL
 NIL
@@ -283,10 +294,10 @@ PENS
 "infected" 1.0 0 -14439633 true "" "plot count turtles with [infected?]"
 
 PLOT
-706
-305
-1202
-579
+765
+294
+1261
+568
 all
 NIL
 NIL
@@ -301,6 +312,21 @@ PENS
 "susceptible" 1.0 0 -8630108 true "" "plot count turtles with [not infected? and not recovered?]"
 "infected" 1.0 0 -10899396 true "" "plot count turtles with [infected?]"
 "recovered" 1.0 0 -2674135 true "" "plot count turtles with [recovered?]"
+
+SLIDER
+22
+87
+194
+120
+init_recruitment_rate
+init_recruitment_rate
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
