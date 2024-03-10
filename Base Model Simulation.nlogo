@@ -1,21 +1,17 @@
-
 turtles-own [;; Turtle characteristics
   infected?
-  quarantined?
   recovered?
   global?
 ]
 
 to setup ;; this procedure sets up the simulation for start
   clear-all
-
   create-turtles number_turtles [
     setxy random-xcor random-ycor
     set shape "person"
     set infected? false
     set recovered? false
     set global? false
-    set quarantined? false
    ]
 
   ask one-of turtles [set infected? true] ;;one gets infected
@@ -25,36 +21,43 @@ to setup ;; this procedure sets up the simulation for start
 end
 
 to went_global ;; represents local turtle going to a different place
-  if random-float 1.0 < travel_chance and infected? = false and recovered? = false and quarantined? = false[
+  if random-float 1.0 < travel_rate and infected? = false and recovered? = false[
   set global? true
   set shape "airplane"
   ]
 end
 
 to went_local ;; represents travelling turtles going back to local place
-  if random-float 1.0 < return_chance and global? [
+  if random-float 1.0 < return_rate and global? [
     set global? false
     set shape "person"
+    if random-float 1.0 < global_transmission_rate[
+      set infected? true
+      recover global_recovery_rate
+    ]
   ]
 end
 
 to go ;; each tick of simulation turtle do this
 
   ;if all? turtles [infected?] [stop]
-  ;if all? turtles [infected? = false] [stop]
+  ;if all? turtles [infected? = false and global? = false] [stop]
 
-  ask turtles[went_global]
-  ask turtles[went_local]
+
+    ask turtles [went_global]
+
+  ask turtles [went_local]
   ask turtles [move]
+  ask turtles [spread]
+  ask turtles [recover recovery_rate]
   ask turtles [recolor]
-
 
   tick
 
 end
 
 to move
-  if quarantined? = false and global? = false
+  if global? = false
   [
    right random 150
    left random 150
@@ -63,12 +66,25 @@ to move
   ]
 end
 
+to spread
+    ifelse infected? [] [
+    if any? other turtles-here with [infected?] and global? = false and random-float 1.0 < transmission_rate and recovered? = false [set infected? true] ;; checking if there is virus near this agent
+  ]
+end
+
+to  recover [rate]
+  if infected?[
+    if random-float 1.0 < rate [
+    set infected? false
+    set recovered? true
+    ]
+  ]
+end
 
 to recolor ;; recolors agent
   ifelse global? [set color white] [set color blue]
-  if infected? [set color red]
-  if quarantined? [set color violet]
   if recovered? [set color yellow]
+  if infected? [set color red]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -78,7 +94,7 @@ GRAPHICS-WINDOW
 450
 -1
 -1
-12.73
+16.12121212121212
 1
 10
 1
@@ -140,33 +156,12 @@ SLIDER
 number_turtles
 number_turtles
 0
-500
-106.0
+5000
+916.0
 1
 1
 NIL
 HORIZONTAL
-
-PLOT
-3
-457
-648
-744
-plot 1
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"infected" 1.0 0 -10899396 true "" "plot count turtles with [infected?]"
-"global" 1.0 0 -15390905 true "" "plot count turtles with [global?]"
-"quarantined" 1.0 0 -8630108 true "" "plot count turtles with [quarantined?]"
-"recovered" 1.0 0 -1184463 true "" "plot count turtles with [recovered?]"
 
 SWITCH
 127
@@ -180,34 +175,112 @@ connection
 -1000
 
 SLIDER
-4
-213
-219
-246
-travel_chance
-travel_chance
+3
+202
+218
+235
+travel_rate
+travel_rate
 0
 1
-0.4
+0.15
 0.05
 1
 NIL
 HORIZONTAL
 
 SLIDER
-5
-284
-177
-317
-return_chance
-return_chance
+3
+241
+212
+274
+return_rate
+return_rate
 0
 1
-0.6
+0.25
 0.05
 1
 NIL
 HORIZONTAL
+
+SLIDER
+2
+282
+216
+315
+transmission_rate
+transmission_rate
+0
+1
+0.1
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+7
+334
+195
+367
+recovery_rate
+recovery_rate
+0
+1
+0.05
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+6
+386
+208
+419
+global_transmission_rate
+global_transmission_rate
+0
+1
+0.3
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+13
+438
+185
+471
+global_recovery_rate
+global_recovery_rate
+0
+1
+0.05
+0.05
+1
+NIL
+HORIZONTAL
+
+PLOT
+698
+50
+1150
+252
+infected
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"infected" 1.0 0 -14439633 true "" "plot count turtles with [infected?]"
 
 @#$#@#$#@
 ## WHAT IS IT?
