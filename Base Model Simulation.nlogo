@@ -1,18 +1,9 @@
+
 turtles-own [;; Turtle characteristics
-  ;virus?
-  exposed?
   infected?
-  asymptomatic?
   quarantined?
-  recovered
-  fatal
-
-  ;; how long our agent already has a virus
-  exposed_duration
-  infected_duration
-  asymptomatic_duration
-  quarantined_duration
-
+  recovered?
+  global?
 ]
 
 to setup ;; this procedure sets up the simulation for start
@@ -21,14 +12,10 @@ to setup ;; this procedure sets up the simulation for start
   create-turtles number_turtles [
     setxy random-xcor random-ycor
     set shape "person"
-    set exposed? false
     set infected? false
-    set asymptomatic? false
+    set recovered? false
+    set global? false
     set quarantined? false
-    set recovered false
-    set fatal false
-    set exposed_duration 0 set infected_duration 0
-    set asymptomatic_duration 0 set quarantined_duration 0
    ]
 
   ask one-of turtles [set infected? true] ;;one gets infected
@@ -37,21 +24,29 @@ to setup ;; this procedure sets up the simulation for start
   reset-ticks
 end
 
+to went_global ;; represents local turtle going to a different place
+  if random-float 1.0 < travel_chance and infected? = false and recovered? = false and quarantined? = false[
+  set global? true
+  set shape "airplane"
+  ]
+end
+
+to went_local ;; represents travelling turtles going back to local place
+  if random-float 1.0 < return_chance and global? [
+    set global? false
+    set shape "person"
+  ]
+end
+
 to go ;; each tick of simulation turtle do this
 
   ;if all? turtles [infected?] [stop]
   ;if all? turtles [infected? = false] [stop]
 
+  ask turtles[went_global]
+  ask turtles[went_local]
   ask turtles [move]
-
-  ask turtles [spread]
-  ask turtles [exposed_transformation]
-  ask turtles [infected_transformation]
-  ask turtles [asymptomatic_transformation]
-  ask turtles [quarantined_transformation]
   ask turtles [recolor]
-  ;tick
-
 
 
   tick
@@ -59,145 +54,21 @@ to go ;; each tick of simulation turtle do this
 end
 
 to move
-  if fatal = false
+  if quarantined? = false and global? = false
   [
-    if quarantined? = false
-    [
-      right random 150
-      left random 150
+   right random 150
+   left random 150
 
-      fd 1
-    ]
+   fd 1
   ]
 end
 
-
-
-to spread ;; Turtle-Turtle interactions (AxA)
-  ifelse infected? [] [
-    if any? other turtles-here with [infected?] or any? other turtles-here with [asymptomatic?] or any? other turtles-here with [exposed?]
-    or any? other turtles-here with [quarantined?]
-    [
-
-      if recovered = false and quarantined? = false and fatal = false and asymptomatic? = false
-      [
-        if random-float 1.0 < contact_probability
-        [
-          set exposed? true
-          if connection [
-            ask self [create-links-from other turtles-here with [infected?]]
-          ]
-        ]
-
-
-      ]
-    ] ;; checking if there is virus near this agent
-
-  ]
-
-end
-
-
-to exposed_transformation ;;
-  if exposed?
-  [
-
-    set exposed_duration exposed_duration + 1
-
-    if connection [ask self [create-links-from other turtles-here with [infected?]]]
-    if exposed_duration > 10
-    [
-      ifelse random-float 1.0 < infectious_probability
-      [
-        set infected? true
-        set exposed? false
-        set exposed_duration 0
-
-      ]
-      [
-        set asymptomatic? true
-        set exposed? false
-        set exposed_duration 0
-      ]
-    ]
-  ]
-
-end
-
-to infected_transformation
-  if infected?
-  [
-    set infected_duration infected_duration + 1
-
-    if connection [ask self [create-links-from other turtles-here with [infected?]]]
-    if random-float 1.0 < hospitalized_probability and infected_duration > 10
-    [
-      set quarantined? true
-      set infected? false
-      set infected_duration 0
-
-    ]
-
-  ]
-end
-
-to asymptomatic_transformation
-  if asymptomatic?
-  [
-    set asymptomatic_duration asymptomatic_duration + 1
-
-    if connection [ask self [create-links-from other turtles-here with [infected?]]]
-    if asymptomatic_duration > 10
-    [
-      ifelse random-float 1.0 < manifestation_probability
-      [
-        set infected? true
-        set asymptomatic? false
-        set asymptomatic_duration 0
-      ]
-      [
-        ;; recover
-        set recovered true
-        set asymptomatic? false
-        set asymptomatic_duration 0
-      ]
-    ]
-
-  ]
-end
-
-
-
-to quarantined_transformation
-  if quarantined?
-  [
-    set quarantined_duration quarantined_duration + 1
-
-    if connection [ask self [create-links-from other turtles-here with [infected?]]]
-    if random-float 1.0 < recover_probability and quarantined_duration > 10
-    [
-      set recovered true
-      set quarantined? false
-      set quarantined_duration 0
-    ]
-    if random-float 1.0 < fatal_probability and quarantined_duration > 10
-    [
-
-      set fatal true
-      set quarantined? false
-      set quarantined_duration 0
-    ]
-  ]
-
-end
 
 to recolor ;; recolors agent
-  ifelse infected? [set color red] [set color blue]
-  if exposed? [set color green]
-  if asymptomatic? [set color orange]
+  ifelse global? [set color white] [set color blue]
+  if infected? [set color red]
   if quarantined? [set color violet]
-  if recovered [set color yellow]
-  if fatal [set color gray]
+  if recovered? [set color yellow]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -225,7 +96,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 2
@@ -262,36 +133,6 @@ NIL
 1
 
 SLIDER
-1
-329
-218
-362
-recover_probability
-recover_probability
-0
-1
-0.1
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-3
-363
-217
-396
-fatal_probability
-fatal_probability
-0
-1
-0.05
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
 3
 167
 220
@@ -300,7 +141,7 @@ number_turtles
 number_turtles
 0
 500
-300
+106.0
 1
 1
 NIL
@@ -314,21 +155,18 @@ PLOT
 plot 1
 NIL
 NIL
-0
-10
-0
-10
+0.0
+10.0
+0.0
+10.0
 true
 true
 "" ""
 PENS
-"exposed" 1 0 -10899396 true "" "plot count turtles with [exposed?]"
-"infected" 1 0 -2674135 true "" "plot count turtles with [infected?]"
-"asymptomatic" 1 0 -955883 true "" "plot count turtles with [asymptomatic?]"
-"quarantined" 1 0 -8630108 true "" "plot count turtles with [quarantined?]"
-"recovered" 1 0 -1184463 true "" "plot count turtles with [recovered]"
-"fatal" 1 0 -7500403 true "" "plot count turtles with [fatal]"
-"total cases" 1 0 -11221820 true "" "plot count turtles with [exposed?] + count turtles with [infected?] +  count turtles with [quarantined?] + count turtles with [asymptomatic?]"
+"infected" 1.0 0 -10899396 true "" "plot count turtles with [infected?]"
+"global" 1.0 0 -15390905 true "" "plot count turtles with [global?]"
+"quarantined" 1.0 0 -8630108 true "" "plot count turtles with [quarantined?]"
+"recovered" 1.0 0 -1184463 true "" "plot count turtles with [recovered?]"
 
 SWITCH
 127
@@ -337,69 +175,40 @@ SWITCH
 168
 connection
 connection
-0
+1
 1
 -1000
 
 SLIDER
-2
-200
-220
-233
-contact_probability
-contact_probability
-0
-1
-1
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-2
-231
+4
+213
 219
-264
-infectious_probability
-infectious_probability
+246
+travel_chance
+travel_chance
 0
 1
-0.25
+0.4
 0.05
 1
 NIL
 HORIZONTAL
 
 SLIDER
-1
-296
-218
-329
-hospitalized_probability
-hospitalized_probability
+5
+284
+177
+317
+return_chance
+return_chance
 0
 1
-0.75
+0.6
 0.05
 1
 NIL
 HORIZONTAL
 
-SLIDER
-0
-263
-219
-296
-manifestation_probability
-manifestation_probability
-0
-1
-0.7
-0.05
-1
-NIL
-HORIZONTAL
 @#$#@#$#@
 ## WHAT IS IT?
 
@@ -749,15 +558,15 @@ NetLogo 6.4.0
 @#$#@#$#@
 @#$#@#$#@
 default
-0
--0.2 0 0 1
-0 1 1 0
-0.2 0 0 1
+0.0
+-0.2 0 0.0 1.0
+0.0 1 1.0 0.0
+0.2 0 0.0 1.0
 link direction
 true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 @#$#@#$#@
-
+0
 @#$#@#$#@
