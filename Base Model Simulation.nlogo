@@ -43,9 +43,9 @@ to go ;; each tick of simulation turtle do this
   ;if all? turtles [infected?] [stop]
   ;if all? turtles [infected? = false and global? = false] [stop]
 
-
+  if ticks mod 25 = 0 and ticks != 0 [ ; epidemic waves
     ask turtles [went_global]
-
+  ]
   ask turtles [went_local]
   ask turtles [move]
   ask turtles [spread]
@@ -157,7 +157,7 @@ number_turtles
 number_turtles
 0
 5000
-916.0
+644.0
 1
 1
 NIL
@@ -198,7 +198,7 @@ return_rate
 return_rate
 0
 1
-0.25
+0.3
 0.05
 1
 NIL
@@ -213,7 +213,7 @@ transmission_rate
 transmission_rate
 0
 1
-0.1
+0.2
 0.05
 1
 NIL
@@ -243,7 +243,7 @@ global_transmission_rate
 global_transmission_rate
 0
 1
-0.3
+0.5
 0.05
 1
 NIL
@@ -281,6 +281,26 @@ false
 "" ""
 PENS
 "infected" 1.0 0 -14439633 true "" "plot count turtles with [infected?]"
+
+PLOT
+706
+305
+1202
+579
+all
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"susceptible" 1.0 0 -8630108 true "" "plot count turtles with [not infected? and not recovered?]"
+"infected" 1.0 0 -10899396 true "" "plot count turtles with [infected?]"
+"recovered" 1.0 0 -2674135 true "" "plot count turtles with [recovered?]"
 
 @#$#@#$#@
 ## WHAT IS IT?
