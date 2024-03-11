@@ -29,7 +29,7 @@ to setup ;; this procedure sets up the simulation for start
 end
 
 to went_global ;; represents local turtle going to a different place
-  let eligible-turtles turtles with [not infected? and not recovered?]
+  let eligible-turtles turtles with [not infected? and not recovered?] ;only susceptibles can travel
   let num-eligible count eligible-turtles
   ifelse num-eligible >= recruitment_rate [
     ask n-of recruitment_rate eligible-turtles [
@@ -173,7 +173,7 @@ number_turtles
 number_turtles
 0
 500
-400.0
+500.0
 1
 1
 NIL
@@ -182,7 +182,7 @@ HORIZONTAL
 SLIDER
 2
 236
-211
+213
 269
 return_rate
 return_rate
@@ -191,7 +191,7 @@ return_rate
 0.16
 0.01
 1
-NIL
+%
 HORIZONTAL
 
 SLIDER
@@ -206,7 +206,7 @@ transmission_rate
 0.5
 0.05
 1
-NIL
+%
 HORIZONTAL
 
 SLIDER
@@ -221,7 +221,7 @@ recovery_rate
 0.13
 0.01
 1
-NIL
+%
 HORIZONTAL
 
 SLIDER
@@ -236,7 +236,7 @@ global_transmission_rate
 0.5
 0.05
 1
-NIL
+%
 HORIZONTAL
 
 SLIDER
@@ -251,7 +251,7 @@ global_recovery_rate
 0.13
 0.01
 1
-NIL
+%
 HORIZONTAL
 
 PLOT
@@ -295,7 +295,7 @@ PENS
 SLIDER
 2
 149
-214
+218
 182
 init_recruitment_rate
 init_recruitment_rate
@@ -304,7 +304,7 @@ init_recruitment_rate
 50.0
 1
 1
-NIL
+sus turtles
 HORIZONTAL
 
 SLIDER
