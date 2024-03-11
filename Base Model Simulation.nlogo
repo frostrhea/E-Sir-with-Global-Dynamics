@@ -27,10 +27,15 @@ to setup ;; this procedure sets up the simulation for start
 end
 
 to went_global ;; represents local turtle going to a different place
-  if random-float 1.0 < travel_rate and infected? = false and recovered? = false[
-  set global? true
-  set shape "airplane"
+  let eligible-turtles turtles with [not infected? and not recovered?]
+  let num-eligible count eligible-turtles
+  if num-eligible >= recruitment_rate [
+    ask n-of recruitment_rate eligible-turtles [
+      set global? true
+      set shape "airplane"
+    ]
   ]
+  set recruitment_rate recruitment_rate + init_recruitment_rate
 end
 
 to went_local ;; represents travelling turtles going back to local place
@@ -53,7 +58,7 @@ to go ;; each tick of simulation turtle do this
     testfunc
     ;ask turtles [went_global]
   ]
-  ;ask turtles [went_local]
+  ask turtles [went_local]
   ask turtles [move]
   ask turtles [spread]
   ask turtles [recover recovery_rate]
@@ -93,20 +98,6 @@ to recolor ;; recolors agent
   ifelse global? [set color white] [set color blue]
   if recovered? [set color yellow]
   if infected? [set color red]
-end
-
-to testfunc
-  let eligible-turtles turtles with [not infected? and not recovered?]
-  let num-eligible count eligible-turtles
-  if num-eligible >= recruitment_rate [
-    ask n-of recruitment_rate eligible-turtles [
-      if random-float 1.0 < global_transmission_rate[
-      set infected? true
-      recover global_recovery_rate
-    ]
-    ]
-  ]
-  set recruitment_rate recruitment_rate + init_recruitment_rate
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -179,7 +170,7 @@ number_turtles
 number_turtles
 0
 500
-400.0
+499.0
 1
 1
 NIL
@@ -194,22 +185,22 @@ travel_rate
 travel_rate
 0
 1
-0.0
+0.35
 0.05
 1
 NIL
 HORIZONTAL
 
 SLIDER
-0
-529
-209
-562
+4
+385
+213
+418
 return_rate
 return_rate
 0
 1
-0.0
+0.3
 0.05
 1
 NIL
@@ -239,8 +230,8 @@ recovery_rate
 recovery_rate
 0
 1
-0.1
-0.05
+0.13
+0.01
 1
 NIL
 HORIZONTAL
@@ -254,7 +245,7 @@ global_transmission_rate
 global_transmission_rate
 0
 1
-0.55
+0.5
 0.05
 1
 NIL
@@ -269,8 +260,8 @@ global_recovery_rate
 global_recovery_rate
 0
 1
-0.1
-0.05
+0.13
+0.01
 1
 NIL
 HORIZONTAL
