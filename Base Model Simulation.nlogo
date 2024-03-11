@@ -54,9 +54,8 @@ to go ;; each tick of simulation turtle do this
   ;if all? turtles [infected?] [stop]
   ;if all? turtles [infected? = false] and ticks >= 100 [stop]
 
-  if ticks mod 30 = 0 and ticks != 0 [ ; epidemic waves
-    testfunc
-    ;ask turtles [went_global]
+  if ticks mod epidemic_wave_gap = 0 and ticks != 0 [ ; epidemic waves
+    went_global
   ]
   ask turtles [went_local]
   ask turtles [move]
@@ -128,10 +127,10 @@ ticks
 30.0
 
 BUTTON
-15
-128
-89
-164
+16
+10
+101
+46
 Setup
 setup
 NIL
@@ -145,10 +144,10 @@ NIL
 1
 
 BUTTON
-128
 129
-206
-162
+11
+207
+44
 Start
 go
 T
@@ -170,23 +169,8 @@ number_turtles
 number_turtles
 0
 500
-499.0
+400.0
 1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-0
-490
-215
-523
-travel_rate
-travel_rate
-0
-1
-0.35
-0.05
 1
 NIL
 HORIZONTAL
@@ -200,8 +184,8 @@ return_rate
 return_rate
 0
 1
-0.3
-0.05
+0.16
+0.01
 1
 NIL
 HORIZONTAL
@@ -254,7 +238,7 @@ HORIZONTAL
 SLIDER
 6
 329
-178
+210
 362
 global_recovery_rate
 global_recovery_rate
@@ -267,10 +251,10 @@ NIL
 HORIZONTAL
 
 PLOT
-768
-41
-1220
-243
+778
+40
+1230
+242
 infected
 NIL
 NIL
@@ -285,10 +269,10 @@ PENS
 "infected" 1.0 0 -14439633 true "" "plot count turtles with [infected?]"
 
 PLOT
-765
-294
-1261
-568
+776
+284
+1272
+558
 all
 NIL
 NIL
@@ -305,15 +289,30 @@ PENS
 "recovered" 1.0 0 -2674135 true "" "plot count turtles with [recovered?]"
 
 SLIDER
-22
-87
-194
-120
+10
+99
+182
+132
 init_recruitment_rate
 init_recruitment_rate
 0
 100
 50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+62
+182
+95
+epidemic_wave_gap
+epidemic_wave_gap
+1
+100
+30.0
 1
 1
 NIL
