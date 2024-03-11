@@ -1,5 +1,6 @@
 globals[
   recruitment_rate
+  stop_simulation?
 ]
 turtles-own [;; Turtle characteristics
   infected?
@@ -20,6 +21,7 @@ to setup ;; this procedure sets up the simulation for start
     set infected_duration 0
    ]
   set recruitment_rate init_recruitment_rate
+  set stop_simulation? false
   ask one-of turtles [set infected? true] ;;one gets infected
   ask turtles [recolor]
 
@@ -29,12 +31,12 @@ end
 to went_global ;; represents local turtle going to a different place
   let eligible-turtles turtles with [not infected? and not recovered?]
   let num-eligible count eligible-turtles
-  if num-eligible >= recruitment_rate [
+  ifelse num-eligible >= recruitment_rate [
     ask n-of recruitment_rate eligible-turtles [
       set global? true
       set shape "airplane"
     ]
-  ]
+  ][ if all? turtles [infected? = false] [set stop_simulation? true]] ; stops simulation when no more epidemic waves can be generated and no more infected
   set recruitment_rate recruitment_rate + init_recruitment_rate
 end
 
@@ -52,7 +54,9 @@ end
 to go ;; each tick of simulation turtle do this
 
   ;if all? turtles [infected?] [stop]
-  ;if all? turtles [infected? = false] and ticks >= 100 [stop]
+ ; if all? turtles [infected? = false] [stop]
+
+  if stop_simulation?[ifelse auto_run_start? [setup][stop]]
 
   if ticks mod epidemic_wave_gap = 0 and ticks != 0 [ ; epidemic waves
     went_global
@@ -127,10 +131,10 @@ ticks
 30.0
 
 BUTTON
-16
-10
-101
-46
+3
+15
+88
+51
 Setup
 setup
 NIL
@@ -144,10 +148,10 @@ NIL
 1
 
 BUTTON
-129
-11
-207
-44
+122
+16
+200
+49
 Start
 go
 T
@@ -161,10 +165,10 @@ NIL
 1
 
 SLIDER
-3
-167
-220
-200
+0
+104
+217
+137
 number_turtles
 number_turtles
 0
@@ -176,10 +180,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-4
-385
-213
-418
+2
+236
+211
+269
 return_rate
 return_rate
 0
@@ -191,10 +195,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-4
-202
-218
-235
+0
+282
+214
+315
 transmission_rate
 transmission_rate
 0
@@ -206,10 +210,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-6
-244
-216
-277
+0
+324
+210
+357
 recovery_rate
 recovery_rate
 0
@@ -221,10 +225,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-9
-284
-211
-317
+4
+369
+206
+402
 global_transmission_rate
 global_transmission_rate
 0
@@ -236,10 +240,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-6
-329
-210
-362
+3
+412
+207
+445
 global_recovery_rate
 global_recovery_rate
 0
@@ -289,10 +293,10 @@ PENS
 "recovered" 1.0 0 -2674135 true "" "plot count turtles with [recovered?]"
 
 SLIDER
-10
-99
+2
+149
+214
 182
-132
 init_recruitment_rate
 init_recruitment_rate
 0
@@ -304,10 +308,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-10
-62
-182
-95
+1
+192
+214
+225
 epidemic_wave_gap
 epidemic_wave_gap
 1
@@ -315,8 +319,19 @@ epidemic_wave_gap
 30.0
 1
 1
-NIL
+tick(s)
 HORIZONTAL
+
+SWITCH
+49
+61
+178
+94
+auto_run_start?
+auto_run_start?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
