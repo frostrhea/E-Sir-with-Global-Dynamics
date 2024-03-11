@@ -56,7 +56,7 @@ to go ;; each tick of simulation turtle do this
   ;if all? turtles [infected?] [stop]
  ; if all? turtles [infected? = false] [stop]
 
-  if stop_simulation?[ifelse auto_run_start? [setup][stop]]
+  if stop_simulation?[ifelse auto_run_start? [setup][stop]] ;if auto run start is enabled will automatically setup and start simulation else stop completely
 
   if ticks mod epidemic_wave_gap = 0 and ticks != 0 [ ; epidemic waves
     went_global
