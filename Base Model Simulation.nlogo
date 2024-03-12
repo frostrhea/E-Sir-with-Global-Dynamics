@@ -223,7 +223,7 @@ number_turtles
 number_turtles
 50
 1000
-275.0
+250.0
 1
 1
 NIL
@@ -238,7 +238,7 @@ return_rate
 return_rate
 0
 1
-0.33
+0.24
 0.01
 1
 %
@@ -253,7 +253,7 @@ transmission_rate
 transmission_rate
 0
 1
-0.65
+0.6
 0.05
 1
 %
@@ -268,7 +268,7 @@ recovery_rate
 recovery_rate
 0
 1
-0.15
+0.13
 0.01
 1
 %
@@ -283,7 +283,7 @@ global_transmission_rate
 global_transmission_rate
 0
 1
-0.65
+0.6
 0.05
 1
 %
@@ -298,7 +298,7 @@ global_recovery_rate
 global_recovery_rate
 0
 1
-0.15
+0.13
 0.01
 1
 %
@@ -351,7 +351,7 @@ init_recruitment_rate
 init_recruitment_rate
 0
 300
-35.0
+45.0
 1
 1
 sus turtles
@@ -366,7 +366,7 @@ epidemic_wave_gap
 epidemic_wave_gap
 1
 100
-30.0
+20.0
 1
 1
 tick(s)
@@ -407,7 +407,7 @@ max_infected_duration
 max_infected_duration
 1
 30
-2.0
+1.0
 1
 1
 ticks
@@ -437,6 +437,23 @@ BUTTON
 47
 Saint Louis
 Saint_Louis
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+465
+14
+530
+47
+NIL
+Illinois
 NIL
 1
 T
