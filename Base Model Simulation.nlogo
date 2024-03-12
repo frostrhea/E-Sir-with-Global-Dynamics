@@ -112,14 +112,14 @@ end
 
 
 to Arizona
-  set number_turtles 600
+  set number_turtles 250
   set init_recruitment_rate 45
-  set epidemic_wave_gap 25
+  set epidemic_wave_gap 20
   set return_rate 0.24
-  set transmission_rate 0.40
-  set recovery_rate 0.21
-  set global_transmission_rate 0.50
-  set global_recovery_rate 0.20
+  set transmission_rate 0.60
+  set recovery_rate 0.13
+  set global_transmission_rate 0.60
+  set global_recovery_rate 0.13
   set max_infected_duration 1
   set total_number_of_waves 2
 end
@@ -210,7 +210,7 @@ number_turtles
 number_turtles
 50
 1000
-280.0
+250.0
 1
 1
 NIL
@@ -225,7 +225,7 @@ return_rate
 return_rate
 0
 1
-0.32
+0.24
 0.01
 1
 %
@@ -240,7 +240,7 @@ transmission_rate
 transmission_rate
 0
 1
-0.55
+0.6
 0.05
 1
 %
@@ -255,7 +255,7 @@ recovery_rate
 recovery_rate
 0
 1
-0.2
+0.13
 0.01
 1
 %
@@ -270,7 +270,7 @@ global_transmission_rate
 global_transmission_rate
 0
 1
-0.55
+0.6
 0.05
 1
 %
@@ -285,7 +285,7 @@ global_recovery_rate
 global_recovery_rate
 0
 1
-0.18
+0.13
 0.01
 1
 %
@@ -338,7 +338,7 @@ init_recruitment_rate
 init_recruitment_rate
 0
 300
-35.0
+45.0
 1
 1
 sus turtles
@@ -353,7 +353,7 @@ epidemic_wave_gap
 epidemic_wave_gap
 1
 100
-12.0
+20.0
 1
 1
 tick(s)
@@ -379,7 +379,7 @@ total_number_of_waves
 total_number_of_waves
 0
 5
-3.0
+2.0
 1
 1
 NIL
@@ -394,7 +394,7 @@ max_infected_duration
 max_infected_duration
 1
 30
-2.0
+1.0
 1
 1
 ticks
