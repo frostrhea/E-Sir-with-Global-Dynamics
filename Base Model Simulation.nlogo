@@ -62,7 +62,7 @@ to go ;; each tick of simulation turtle do this
   ;if all? turtles [infected?] [stop]
  ; if all? turtles [infected? = false] [stop]
 
-  ;if stop_simulation?[ifelse auto_run_start? [setup][stop]] ;if auto run start is enabled will automatically setup and start simulation else stop completely
+  if stop_simulation?[ifelse auto_run_start? [setup][stop]] ;if auto run start is enabled will automatically setup and start simulation else stop completely
 
   if ticks mod epidemic_wave_gap = 0 and ticks != 0 [ ; epidemic waves
     went_global
@@ -122,6 +122,19 @@ to Arizona
   set global_recovery_rate 0.20
   set max_infected_duration 1
   set total_number_of_waves 2
+end
+
+to Saint_Louis
+  set number_turtles 280
+  set init_recruitment_rate 35
+  set epidemic_wave_gap 12
+  set return_rate 0.32
+  set transmission_rate 0.55
+  set recovery_rate 0.20
+  set global_transmission_rate 0.55
+  set global_recovery_rate 0.18
+  set max_infected_duration 2
+  set total_number_of_waves 3
 end
 
 
@@ -197,7 +210,7 @@ number_turtles
 number_turtles
 50
 1000
-220.0
+280.0
 1
 1
 NIL
@@ -212,7 +225,7 @@ return_rate
 return_rate
 0
 1
-0.23
+0.32
 0.01
 1
 %
@@ -227,7 +240,7 @@ transmission_rate
 transmission_rate
 0
 1
-0.5
+0.55
 0.05
 1
 %
@@ -242,7 +255,7 @@ recovery_rate
 recovery_rate
 0
 1
-0.18
+0.2
 0.01
 1
 %
@@ -257,7 +270,7 @@ global_transmission_rate
 global_transmission_rate
 0
 1
-0.5
+0.55
 0.05
 1
 %
@@ -281,7 +294,7 @@ HORIZONTAL
 PLOT
 778
 40
-1230
+1346
 242
 infected
 NIL
@@ -325,7 +338,7 @@ init_recruitment_rate
 init_recruitment_rate
 0
 300
-20.0
+35.0
 1
 1
 sus turtles
@@ -340,7 +353,7 @@ epidemic_wave_gap
 epidemic_wave_gap
 1
 100
-24.0
+12.0
 1
 1
 tick(s)
@@ -365,7 +378,7 @@ SLIDER
 total_number_of_waves
 total_number_of_waves
 0
-10
+5
 3.0
 1
 1
@@ -381,7 +394,7 @@ max_infected_duration
 max_infected_duration
 1
 30
-12.0
+2.0
 1
 1
 ticks
@@ -394,6 +407,23 @@ BUTTON
 47
 Arizona
 Arizona
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+349
+14
+438
+47
+Saint Louis
+Saint_Louis
 NIL
 1
 T
