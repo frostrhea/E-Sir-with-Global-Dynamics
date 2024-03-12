@@ -1,6 +1,7 @@
 globals[
   recruitment_rate
   stop_simulation?
+  curr_number_of_waves
 ]
 turtles-own [;; Turtle characteristics
   infected?
@@ -20,6 +21,7 @@ to setup ;; this procedure sets up the simulation for start
     set global? false
     set infected_duration 0
    ]
+  set curr_number_of_waves 0
   set recruitment_rate init_recruitment_rate
   set stop_simulation? false
   ask one-of turtles [set infected? true] ;;one gets infected
@@ -31,23 +33,27 @@ end
 to went_global ;; represents local turtle going to a different place
   let eligible-turtles turtles with [not infected? and not recovered?] ;only susceptibles can travel
   let num-eligible count eligible-turtles
-  ifelse num-eligible >= recruitment_rate [
+  ifelse num-eligible >= recruitment_rate and curr_number_of_waves < total_number_of_waves [
     ask n-of recruitment_rate eligible-turtles [
       set global? true
       set shape "airplane"
     ]
   ][ if all? turtles [infected? = false] [set stop_simulation? true]] ; stops simulation when no more epidemic waves can be generated and no more infected
+  set curr_number_of_waves curr_number_of_waves + 1
   set recruitment_rate recruitment_rate + init_recruitment_rate
 end
 
 to went_local ;; represents travelling turtles going back to local place
   if random-float 1.0 < return_rate and global? [
-    set global? false
-    set shape "person"
     if random-float 1.0 < global_transmission_rate[
       set infected? true
-      recover global_recovery_rate
+      if random-float 1.0 < global_recovery_rate[
+        set infected? false
+        set recovered? true
     ]
+    ]
+    set global? false
+    set shape "person"
   ]
 end
 
@@ -82,14 +88,14 @@ to move
 end
 
 to spread
-    ifelse infected? [] [
-    if global? = false and random-float 1.0 < transmission_rate and recovered? = false and any? other turtles-here with [infected?] [set infected? true] ;; checking if there is virus near this agent
+    ifelse infected? or global? or recovered? [] [
+    if any? other turtles-here with [infected?] and random-float 1.0 < transmission_rate [set infected? true] ;; checking if there is virus near this agent
   ]
 end
 
 to  recover [rate]
   if infected?[
-    if random-float 1.0 < rate[
+    if random-float 1.0 < rate and infected_duration >= max_infected_duration[
       set infected? false
       set recovered? true
     ]
@@ -102,15 +108,34 @@ to recolor ;; recolors agent
   if recovered? [set color yellow]
   if infected? [set color red]
 end
+
+
+
+to Arizona
+  set number_turtles 600
+  set init_recruitment_rate 45
+  set epidemic_wave_gap 25
+  set return_rate 0.24
+  set transmission_rate 0.40
+  set recovery_rate 0.21
+  set global_transmission_rate 0.50
+  set global_recovery_rate 0.20
+  set max_infected_duration 1
+  set total_number_of_waves 2
+end
+
+
+
+
 @#$#@#$#@
 GRAPHICS-WINDOW
-224
-21
-764
-562
+234
+93
+706
+566
 -1
 -1
-16.12121212121212
+14.061
 1
 10
 1
@@ -171,9 +196,9 @@ SLIDER
 137
 number_turtles
 number_turtles
-0
-500
-500.0
+50
+1000
+418.0
 1
 1
 NIL
@@ -188,7 +213,7 @@ return_rate
 return_rate
 0
 1
-0.16
+0.24
 0.01
 1
 %
@@ -203,7 +228,7 @@ transmission_rate
 transmission_rate
 0
 1
-0.5
+0.4
 0.05
 1
 %
@@ -218,7 +243,7 @@ recovery_rate
 recovery_rate
 0
 1
-0.13
+0.21
 0.01
 1
 %
@@ -248,7 +273,7 @@ global_recovery_rate
 global_recovery_rate
 0
 1
-0.13
+0.2
 0.01
 1
 %
@@ -300,8 +325,8 @@ SLIDER
 init_recruitment_rate
 init_recruitment_rate
 0
-100
-50.0
+300
+45.0
 1
 1
 sus turtles
@@ -316,7 +341,7 @@ epidemic_wave_gap
 epidemic_wave_gap
 1
 100
-30.0
+25.0
 1
 1
 tick(s)
@@ -332,6 +357,53 @@ auto_run_start?
 0
 1
 -1000
+
+SLIDER
+11
+531
+183
+564
+total_number_of_waves
+total_number_of_waves
+0
+10
+2.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+14
+471
+202
+504
+max_infected_duration
+max_infected_duration
+1
+30
+1.0
+1
+1
+ticks
+HORIZONTAL
+
+BUTTON
+254
+14
+325
+47
+Arizona
+Arizona
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
