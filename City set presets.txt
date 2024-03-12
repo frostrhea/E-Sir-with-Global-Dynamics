@@ -1,0 +1,16 @@
+copy the code below to set presets for the city you have tested, 
+add button on user interface then set button command as your function name:
+
+
+to <City Name>
+  set number_turtles 
+  set init_recruitment_rate
+  set epidemic_wave_gap 
+  set return_rate 
+  set transmission_rate 
+  set recovery_rate 
+  set global_transmission_rate 
+  set global_recovery_rate 
+  set max_infected_duration
+  set total_number_of_waves 
+end
