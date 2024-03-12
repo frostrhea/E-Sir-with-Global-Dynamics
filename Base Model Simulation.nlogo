@@ -138,6 +138,19 @@ to Saint_Louis
 end
 
 
+to Illinois
+  set number_turtles 275
+  set init_recruitment_rate 35
+  set epidemic_wave_gap 30
+  set return_rate 0.33
+  set transmission_rate 0.65
+  set recovery_rate 0.15
+  set global_transmission_rate 0.65
+  set global_recovery_rate 0.15
+  set max_infected_duration 2
+  set total_number_of_waves 2
+end
+
 
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -210,7 +223,7 @@ number_turtles
 number_turtles
 50
 1000
-250.0
+275.0
 1
 1
 NIL
@@ -225,7 +238,7 @@ return_rate
 return_rate
 0
 1
-0.24
+0.33
 0.01
 1
 %
@@ -240,7 +253,7 @@ transmission_rate
 transmission_rate
 0
 1
-0.6
+0.65
 0.05
 1
 %
@@ -255,7 +268,7 @@ recovery_rate
 recovery_rate
 0
 1
-0.13
+0.15
 0.01
 1
 %
@@ -270,7 +283,7 @@ global_transmission_rate
 global_transmission_rate
 0
 1
-0.6
+0.65
 0.05
 1
 %
@@ -285,7 +298,7 @@ global_recovery_rate
 global_recovery_rate
 0
 1
-0.13
+0.15
 0.01
 1
 %
@@ -338,7 +351,7 @@ init_recruitment_rate
 init_recruitment_rate
 0
 300
-45.0
+35.0
 1
 1
 sus turtles
@@ -353,7 +366,7 @@ epidemic_wave_gap
 epidemic_wave_gap
 1
 100
-20.0
+30.0
 1
 1
 tick(s)
@@ -394,7 +407,7 @@ max_infected_duration
 max_infected_duration
 1
 30
-1.0
+2.0
 1
 1
 ticks
