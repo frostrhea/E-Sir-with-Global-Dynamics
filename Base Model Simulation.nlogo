@@ -150,8 +150,6 @@ to Illinois
   set max_infected_duration 2
   set total_number_of_waves 2
 end
-
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 234
@@ -223,7 +221,7 @@ number_turtles
 number_turtles
 50
 1000
-250.0
+280.0
 1
 1
 NIL
@@ -238,7 +236,7 @@ return_rate
 return_rate
 0
 1
-0.24
+0.32
 0.01
 1
 %
@@ -253,7 +251,7 @@ transmission_rate
 transmission_rate
 0
 1
-0.6
+0.55
 0.05
 1
 %
@@ -268,7 +266,7 @@ recovery_rate
 recovery_rate
 0
 1
-0.13
+0.2
 0.01
 1
 %
@@ -283,7 +281,7 @@ global_transmission_rate
 global_transmission_rate
 0
 1
-0.6
+0.55
 0.05
 1
 %
@@ -298,7 +296,7 @@ global_recovery_rate
 global_recovery_rate
 0
 1
-0.13
+0.18
 0.01
 1
 %
@@ -351,7 +349,7 @@ init_recruitment_rate
 init_recruitment_rate
 0
 300
-45.0
+35.0
 1
 1
 sus turtles
@@ -366,7 +364,7 @@ epidemic_wave_gap
 epidemic_wave_gap
 1
 100
-20.0
+12.0
 1
 1
 tick(s)
@@ -392,7 +390,7 @@ total_number_of_waves
 total_number_of_waves
 0
 5
-2.0
+3.0
 1
 1
 NIL
@@ -407,7 +405,7 @@ max_infected_duration
 max_infected_duration
 1
 30
-1.0
+2.0
 1
 1
 ticks
@@ -416,9 +414,9 @@ HORIZONTAL
 BUTTON
 254
 14
-325
+386
 47
-Arizona
+Arizona/Kansas
 Arizona
 NIL
 1
@@ -431,11 +429,11 @@ NIL
 1
 
 BUTTON
-349
+395
 14
-438
+560
 47
-Saint Louis
+Saint Louis/San Francisco
 Saint_Louis
 NIL
 1
@@ -448,11 +446,11 @@ NIL
 1
 
 BUTTON
-465
+573
 14
-530
+706
 47
-NIL
+Missouri/Illinois
 Illinois
 NIL
 1
